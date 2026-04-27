@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="NomadBase">
+<meta name="theme-color" content="#FDFAF6">
+<title>NomadBase</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --ink:#0F0E0C;--sand:#F6F0E4;--warm:#D4713A;--warm2:#F0CCA8;
+  --teal:#1E6B68;--teal2:#C4E8E6;--muted:#8A8278;--surface:#FDFAF6;
+  --border:rgba(15,14,12,0.09);--serif:'Fraunces',Georgia,serif;
+  --sans:'Outfit',system-ui,sans-serif;--tab-h:72px;
+  --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans);background:var(--surface);color:var(--ink);-webkit-font-smoothing:antialiased;}
+
+/* Desktop: phone shell */
+@media(min-width:600px){
+  body{background:#1a1714;display:flex;align-items:center;justify-content:center;}
+  .shell{width:390px;height:844px;border-radius:48px;overflow:hidden;position:relative;
+    box-shadow:0 0 0 1px rgba(255,255,255,0.08),0 0 0 10px #2a2520,0 0 0 11px rgba(255,255,255,0.06),0 40px 80px rgba(0,0,0,0.6);
+    flex-shrink:0;}
+  .notch{display:block;}
+  .sbar{padding-top:14px;}
+}
+/* Mobile: full screen */
+@media(max-width:599px){
+  .shell{width:100%;height:100%;border-radius:0;box-shadow:none;}
+  .notch{display:none;}
+  .sbar{padding-top:calc(var(--safe-top) + 8px);}
+}
+
+.shell{background:var(--surface);display:flex;flex-direction:column;}
+.notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:120px;height:34px;background:#1a1714;border-radius:0 0 20px 20px;z-index:20;}
+.sbar{display:flex;align-items:center;justify-content:space-between;padding-left:26px;padding-right:26px;padding-bottom:6px;background:var(--surface);position:relative;z-index:10;flex-shrink:0;}
+.stime{font-size:15px;font-weight:600;color:var(--ink);}
+.sicons{display:flex;gap:5px;align-items:center;}
+
+.appbody{flex:1;overflow:hidden;position:relative;}
+
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .22s ease,transform .22s ease;scrollbar-width:none;padding-bottom:calc(var(--tab-h) + var(--safe-bottom) + 8px);background:var(--surface);}
+.screen::-webkit-scrollbar{display:none;}
+.screen.on{opacity:1;pointer-events:all;transform:translateY(0);}
+
+.bnav{height:calc(var(--tab-h) + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:rgba(253,250,246,.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;align-items:stretch;flex-shrink:0;position:relative;z-index:50;padding-left:6px;padding-right:6px;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;border:none;background:none;font-family:var(--sans);padding:8px 4px 6px;border-radius:14px;}
+.nicon{font-size:22px;transition:transform .2s;line-height:1;}
+.ni.on .nicon{transform:scale(1.18);}
+.nlbl{font-size:10px;font-weight:500;color:var(--muted);transition:color .15s;}
+.ni.on .nlbl{color:var(--warm);font-weight:600;}
+.ndot{width:4px;height:4px;border-radius:50%;background:var(--warm);opacity:0;transform:scale(0);transition:all .2s;}
+.ni.on .ndot{opacity:1;transform:scale(1);}
+
+/* DISCOVER */
+.dhead{padding:12px 18px 10px;}
+.dtop{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.logo{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);letter-spacing:-.5px;}
+.logo em{color:var(--warm);font-style:italic;}
+.ava{width:36px;height:36px;border-radius:50%;background:var(--warm);color:white;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:600;}
+.spill{display:flex;align-items:center;gap:10px;background:var(--sand);border-radius:14px;padding:11px 14px;margin-bottom:12px;}
+.spill svg{width:15px;height:15px;flex-shrink:0;opacity:.4;}
+.spill input{border:none;outline:none;background:transparent;font-family:var(--sans);font-size:14px;color:var(--ink);flex:1;}
+.spill input::placeholder{color:var(--muted);}
+.chips{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;}
+.chips::-webkit-scrollbar{display:none;}
+.chip{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;cursor:pointer;border:none;font-family:var(--sans);transition:all .15s;background:var(--sand);color:var(--muted);}
+.chip.on{background:var(--ink);color:white;}
+
+.hcard{margin:10px 16px 0;border-radius:22px;overflow:hidden;height:160px;position:relative;background:linear-gradient(135deg,#1E6B68 0%,#154e4c 100%);cursor:pointer;}
+.hglow{position:absolute;inset:0;background:radial-gradient(ellipse at 75% 25%,rgba(212,113,58,.45) 0%,transparent 58%);}
+.hbody{position:relative;z-index:1;padding:18px;height:100%;display:flex;flex-direction:column;justify-content:space-between;}
+.heyebrow{font-size:10px;letter-spacing:1.4px;text-transform:uppercase;color:rgba(255,255,255,.55);font-weight:600;}
+.htitle{font-family:var(--serif);font-size:24px;color:white;line-height:1.2;font-weight:300;}
+.htitle em{font-style:italic;color:#F0CCA8;}
+.hbtn{display:inline-flex;align-items:center;gap:5px;background:white;color:var(--ink);padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;width:fit-content;}
+
+.secrow{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 10px;}
+.seclbl{font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink);}
+.secmore{font-size:12px;color:var(--warm);font-weight:500;}
+
+.hscroll{display:flex;gap:11px;padding:0 18px 2px;overflow-x:auto;scrollbar-width:none;}
+.hscroll::-webkit-scrollbar{display:none;}
+.hc{flex-shrink:0;width:150px;border-radius:18px;overflow:hidden;cursor:pointer;border:1px solid var(--border);background:white;transition:transform .15s;}
+.hc:active{transform:scale(.96);}
+.hcimg{height:100px;position:relative;display:flex;align-items:center;justify-content:center;font-size:38px;}
+.hcgrad{position:absolute;inset:0;background:linear-gradient(0deg,rgba(15,14,12,.5) 0%,transparent 50%);}
+.hccost{position:absolute;bottom:7px;left:8px;z-index:1;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);color:white;font-size:10px;font-weight:600;padding:2px 7px;border-radius:7px;}
+.hsave{position:absolute;top:7px;right:7px;z-index:2;background:rgba(255,255,255,.85);border:none;border-radius:50%;width:26px;height:26px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.hsave.on{background:#ffe8e8;}
+.hcbody{padding:8px 10px 10px;}
+.hcname{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--ink);}
+.hcsub{font-size:10px;color:var(--muted);margin-top:1px;}
+
+.clist{padding:0 14px;}
+.crow{display:flex;align-items:center;gap:11px;background:white;border-radius:16px;padding:11px;margin-bottom:9px;cursor:pointer;border:1px solid var(--border);transition:transform .15s,border-color .15s;}
+.crow:active{transform:scale(.98);border-color:var(--warm);}
+.cemoji{width:58px;height:58px;border-radius:13px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;}
+.cinfo{flex:1;min-width:0;}
+.cname{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);}
+.ccountry{font-size:11px;color:var(--muted);margin-top:1px;}
+.ctags{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;}
+.ctag{font-size:10px;padding:2px 7px;border-radius:6px;background:var(--sand);color:var(--muted);font-weight:500;}
+.cr{text-align:right;flex-shrink:0;}
+.ccost{font-size:15px;font-weight:700;color:var(--ink);}
+.clbl{font-size:10px;color:var(--muted);}
+.wbars{display:flex;align-items:flex-end;justify-content:flex-end;gap:2px;margin-top:4px;height:12px;}
+.wb{width:3px;border-radius:1px;background:var(--teal);}
+
+/* MAP */
+.mapwrap{position:relative;height:295px;background:#C4DEDA;overflow:hidden;}
+.mapwrap svg{width:100%;height:100%;}
+.mapover{position:absolute;top:0;left:0;right:0;padding:14px 18px;background:linear-gradient(180deg,rgba(196,222,218,.95) 0%,transparent 100%);z-index:5;}
+.maptitle{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink);}
+.mapsub{font-size:12px;color:var(--muted);margin-top:2px;}
+.mapbot{background:var(--surface);border-radius:24px 24px 0 0;margin-top:-18px;position:relative;z-index:4;padding:12px 16px 0;}
+.maphandle{width:32px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px;}
+.maprow{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid var(--border);cursor:pointer;}
+.maprow:last-child{border-bottom:none;}
+.mapdot{width:8px;height:8px;border-radius:50%;background:var(--warm);flex-shrink:0;}
+.mapname{font-weight:500;font-size:14px;color:var(--ink);flex:1;}
+.mapcountry{font-size:11px;color:var(--muted);}
+.mapprice{font-size:13px;font-weight:700;color:var(--teal);}
+
+/* QUIZ */
+.qpad{padding:18px 18px 0;}
+.qprog{display:flex;gap:5px;margin-bottom:24px;}
+.qb{flex:1;height:3px;border-radius:2px;background:var(--border);transition:background .3s;}
+.qb.done{background:var(--warm);}
+.qb.now{background:var(--ink);}
+.qtitle{font-family:var(--serif);font-size:21px;font-weight:600;color:var(--ink);line-height:1.3;margin-bottom:5px;}
+.qsub{font-size:13px;color:var(--muted);margin-bottom:22px;}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:22px;}
+.qopt{background:white;border:1.5px solid var(--border);border-radius:16px;padding:13px;text-align:left;cursor:pointer;font-family:var(--sans);transition:all .15s;}
+.qopt:active{transform:scale(.97);}
+.qopt.sel{border-color:var(--ink);background:var(--sand);}
+.qicon{font-size:22px;margin-bottom:7px;display:block;}
+.ql{font-size:13px;font-weight:600;color:var(--ink);}
+.qs{font-size:11px;color:var(--muted);margin-top:2px;}
+.qbtn{width:100%;background:var(--ink);color:white;border:none;border-radius:15px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);}
+.qbtn:active{opacity:.83;}
+
+.restop{margin:0 16px 14px;background:linear-gradient(135deg,#1E6B68,#154e4c);border-radius:20px;padding:18px;}
+.rest{font-family:var(--serif);font-size:20px;color:white;font-weight:300;}
+.rest em{font-style:italic;color:#F0CCA8;}
+.ressub{font-size:12px;color:rgba(255,255,255,.55);margin-top:3px;}
+.rescard{display:flex;align-items:center;gap:11px;background:white;border-radius:15px;padding:12px 13px;margin:0 16px 9px;cursor:pointer;border:1px solid var(--border);transition:transform .15s;}
+.rescard:active{transform:scale(.98);border-color:var(--warm);}
+.resrank{font-family:var(--serif);font-size:24px;font-weight:600;color:var(--warm);min-width:26px;}
+.resinfo{flex:1;}
+.resname{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--ink);}
+.restags{display:flex;gap:4px;margin-top:4px;flex-wrap:wrap;}
+.restag{font-size:10px;padding:2px 7px;border-radius:6px;background:var(--teal2);color:var(--teal);font-weight:600;}
+.resscore{background:var(--sand);border-radius:10px;padding:7px 11px;text-align:center;}
+.resscoren{font-size:17px;font-weight:700;color:var(--ink);display:block;font-family:var(--serif);}
+.resscorel{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+.retake{display:block;width:calc(100% - 32px);margin:4px 16px 16px;background:white;border:1.5px solid var(--border);border-radius:15px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;font-family:var(--sans);color:var(--ink);text-align:center;}
+
+/* AI */
+.ais{display:flex;flex-direction:column;}
+.aihead{padding:14px 18px 12px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.aith{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ink);}
+.aish{font-size:12px;color:var(--muted);margin-top:2px;}
+.aibadge{display:inline-flex;align-items:center;gap:5px;background:var(--teal2);color:var(--teal);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;margin-top:6px;}
+.aiblink{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:bl 2s infinite;}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
+.aimsgs{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:11px;scrollbar-width:none;}
+.aimsgs::-webkit-scrollbar{display:none;}
+.aibot{align-self:flex-start;max-width:84%;}
+.aiuser{align-self:flex-end;max-width:84%;}
+.aibot-bub{background:white;border:1px solid var(--border);border-radius:17px 17px 17px 4px;padding:10px 13px;font-size:13px;line-height:1.65;color:var(--ink);}
+.aiuser-bub{background:var(--ink);color:white;border-radius:17px 17px 4px 17px;padding:10px 13px;font-size:13px;line-height:1.65;}
+.aifrom{font-size:10px;color:var(--muted);font-weight:600;letter-spacing:.5px;margin-bottom:4px;text-transform:uppercase;}
+.aichips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.aichip{background:var(--warm2);color:#7A3A10;border:none;border-radius:20px;padding:5px 11px;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--sans);transition:all .15s;}
+.aichip:active{background:var(--warm);color:white;}
+.aibar{display:flex;align-items:center;gap:8px;padding:10px 16px 12px;background:var(--surface);flex-shrink:0;}
+.aiinp{flex:1;background:var(--sand);border:none;border-radius:22px;padding:10px 15px;font-size:13px;font-family:var(--sans);color:var(--ink);outline:none;}
+.aiinp::placeholder{color:var(--muted);}
+.aisend{width:38px;height:38px;border-radius:50%;border:none;background:var(--warm);color:white;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.aisend:active{transform:scale(.9);}
+
+/* SAVED */
+.savtop{padding:14px 18px 0;}
+.savh{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);}
+.empty{display:flex;flex-direction:column;align-items:center;padding:64px 32px;text-align:center;}
+.emptyicon{font-size:48px;margin-bottom:14px;}
+.emptytitle{font-family:var(--serif);font-size:18px;color:var(--ink);margin-bottom:6px;}
+.emptysub{font-size:13px;color:var(--muted);line-height:1.6;}
+
+/* SHEET */
+.shbg{position:absolute;inset:0;background:rgba(15,14,12,.5);z-index:100;display:none;align-items:flex-end;}
+.shbg.open{display:flex;}
+.sheet{background:var(--surface);border-radius:26px 26px 0 0;width:100%;max-height:88%;overflow-y:auto;scrollbar-width:none;animation:sup .28s cubic-bezier(.32,.72,0,1);}
+.sheet::-webkit-scrollbar{display:none;}
+@keyframes sup{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+.shpull{display:flex;justify-content:center;padding:10px 0 4px;}
+.shpill{width:36px;height:4px;border-radius:2px;background:var(--border);cursor:pointer;}
+.shhero{height:196px;margin:0 14px;border-radius:20px;overflow:hidden;position:relative;display:flex;align-items:flex-end;}
+.shgrad{position:absolute;inset:0;background:linear-gradient(0deg,rgba(15,14,12,.65) 0%,transparent 55%);}
+.shtxt{position:relative;z-index:1;padding:15px;color:white;}
+.shcity{font-family:var(--serif);font-size:26px;font-weight:600;}
+.shctry{font-size:13px;opacity:.8;margin-top:1px;}
+.shbody{padding:15px 17px 28px;}
+.shstats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;}
+.shstat{background:white;border:1px solid var(--border);border-radius:13px;padding:10px 5px;text-align:center;}
+.shstatv{font-size:13px;font-weight:700;color:var(--ink);font-family:var(--serif);}
+.shstatl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;margin-top:2px;}
+.shsec{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--ink);margin-bottom:7px;}
+.shdesc{font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:15px;}
+.shtags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:17px;}
+.shtag{background:var(--sand);color:var(--ink);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:500;}
+.shsave{width:100%;background:var(--warm);color:white;border:none;border-radius:15px;padding:15px;font-size:15px;font-weight:600;cursor:pointer;font-family:var(--sans);}
+.shsave:active{opacity:.83;}
+.shsave.sv{background:var(--teal);}
+
+/* TOAST */
+.toast{position:absolute;bottom:calc(var(--tab-h) + 14px);left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:white;padding:9px 20px;border-radius:20px;font-size:12px;font-weight:500;z-index:200;opacity:0;transition:all .28s;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="notch"></div>
+  <div class="sbar">
+    <div class="stime" id="clk">9:41</div>
+    <div style="width:80px"></div>
+    <div class="sicons">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1.42 9a16 16 0 0 1 21.16 0M5 12.55a11 11 0 0 1 14.08 0M10.83 16.1a6 6 0 0 1 2.34 0M12 20h.01"/></svg>
+      <svg width="15" height="15" viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="11" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><rect x="3" y="8" width="14" height="9" rx="1" fill="currentColor" opacity=".8"/><path d="M22 11v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <div class="appbody">
+    <!-- DISCOVER -->
+    <div class="screen on" id="s-discover">
+      <div class="dhead">
+        <div class="dtop"><div class="logo">Nomad<em>Base</em></div><div class="ava">JD</div></div>
+        <div class="spill">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input type="text" placeholder="Search cities, vibes…" id="sinput" oninput="render()">
+        </div>
+        <div class="chips">
+          <button class="chip on" onclick="sf(this,'all')">All</button>
+          <button class="chip" onclick="sf(this,'cheap')">Budget</button>
+          <button class="chip" onclick="sf(this,'europe')">Europe</button>
+          <button class="chip" onclick="sf(this,'asia')">Asia</button>
+          <button class="chip" onclick="sf(this,'latin')">Latin America</button>
+          <button class="chip" onclick="sf(this,'beach')">Beach</button>
+          <button class="chip" onclick="sf(this,'mountain')">Mountains</button>
+          <button class="chip" onclick="sf(this,'fastnet')">Fast WiFi</button>
+        </div>
+      </div>
+      <div class="hcard" onclick="gt('s-match')">
+        <div class="hglow"></div>
+        <div class="hbody">
+          <div class="heyebrow">Find your perfect base</div>
+          <div class="htitle">Where should you<br>live <em>next</em>?</div>
+          <div class="hbtn">Take the quiz →</div>
+        </div>
+      </div>
+      <div class="secrow"><div class="seclbl">Featured</div><div class="secmore">See all</div></div>
+      <div class="hscroll" id="hscroll"></div>
+      <div class="secrow" style="margin-top:14px;"><div class="seclbl">All bases</div><div class="secmore" id="ccount"></div></div>
+      <div class="clist" id="clist"></div>
+    </div>
+
+    <!-- MAP -->
+    <div class="screen" id="s-map">
+      <div class="mapwrap">
+        <svg viewBox="0 0 390 295" preserveAspectRatio="xMidYMid meet">
+          <rect width="390" height="295" fill="#C4DEDA"/>
+          <path d="M18,42 L78,40 L88,68 L98,98 L86,126 L63,136 L38,131 L22,106 L16,76Z" fill="#D8CCA8" stroke="#BEB897" stroke-width=".7"/>
+          <path d="M52,155 L88,150 L98,178 L93,222 L76,248 L56,245 L43,218 L40,184Z" fill="#D8CCA8" stroke="#BEB897" stroke-width=".7"/>
+          <path d="M165,32 L200,29 L210,50 L205,73 L187,80 L168,68 L161,50Z" fill="#D8CCA8" stroke="#BEB897" stroke-width=".7"/>
+          <path d="M162,88 L204,84 L215,112 L210,172 L191,208 L170,210 L153,183 L146,138 L150,108Z" fill="#D8CCA8" stroke="#BEB897" stroke-width=".7"/>
+          <path d="M210,25 L316,21 L332,56 L326,103 L302,116 L270,113 L237,92 L213,78 L206,52Z" fill="#D8CCA8" stroke="#BEB897" stroke-width=".7"/>
+          <path d="M270,116 L308,118 L312,150 L293,166 L270,156 L260,136Z" fill="#D8CCA8" stroke="#BEB897" stroke-width=".7"/>
+          <path d="M282,196 L348,192 L360,222 L352,260 L318,268 L289,246 L276,220Z" fill="#D8CCA8" stroke="#BEB897" stroke-width=".7"/>
+          <g id="mpins"></g>
+        </svg>
+        <div class="mapover"><div class="maptitle">Nomad Map</div><div class="mapsub">12 bases worldwide</div></div>
+      </div>
+      <div class="mapbot"><div class="maphandle"></div><div id="mlist"></div></div>
+    </div>
+
+    <!-- MATCH -->
+    <div class="screen" id="s-match"><div id="qbox"></div></div>
+
+    <!-- AI -->
+    <div class="screen ais" id="s-ai">
+      <div class="aihead">
+        <div class="aith">Nomad AI</div>
+        <div class="aish">Ask anything about living abroad</div>
+        <div class="aibadge"><div class="aiblink"></div>Online now</div>
+      </div>
+      <div class="aimsgs" id="aimsgs">
+        <div class="aibot">
+          <div class="aifrom">Nomad AI</div>
+          <div class="aibot-bub">Hey! Tell me what you're looking for — budget, climate, vibe — and I'll find your perfect base. 🌍</div>
+          <div class="aichips">
+            <button class="aichip" onclick="ask('Cheap city with great coffee')">Cheap + coffee ☕</button>
+            <button class="aichip" onclick="ask('Beach town with fast WiFi')">Beach + WiFi 🏖️</button>
+            <button class="aichip" onclick="ask('Tell me about Tbilisi')">About Tbilisi</button>
+            <button class="aichip" onclick="ask('Best cities in winter')">Best in winter ❄️</button>
+          </div>
+        </div>
+      </div>
+      <div class="aibar">
+        <input class="aiinp" type="text" placeholder="Ask about any city…" id="aiinp" onkeydown="if(event.key==='Enter')sai()">
+        <button class="aisend" onclick="sai()">↑</button>
+      </div>
+    </div>
+
+    <!-- SAVED -->
+    <div class="screen" id="s-saved">
+      <div class="savtop"><div class="savh">Saved bases</div></div>
+      <div id="savcontent"></div>
+    </div>
+
+    <!-- SHEET -->
+    <div class="shbg" id="shbg" onclick="cls(event)">
+      <div class="sheet">
+        <div class="shpull"><div class="shpill" onclick="cls()"></div></div>
+        <div class="shhero" id="shhero"><div class="shgrad"></div><div class="shtxt"><div class="shcity" id="shname"></div><div class="shctry" id="shctry"></div></div></div>
+        <div class="shbody">
+          <div class="shstats" id="shstats"></div>
+          <div class="shsec">About this base</div>
+          <div class="shdesc" id="shdesc"></div>
+          <div class="shsec">Good for</div>
+          <div class="shtags" id="shtags"></div>
+          <button class="shsave" id="shbtn" onclick="svsh()">Save this base</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <button class="ni on" id="tab-s-discover" onclick="gt('s-discover')"><div class="nicon">🧭</div><div class="nlbl">Discover</div><div class="ndot"></div></button>
+    <button class="ni" id="tab-s-map" onclick="gt('s-map')"><div class="nicon">🗺️</div><div class="nlbl">Map</div><div class="ndot"></div></button>
+    <button class="ni" id="tab-s-match" onclick="gt('s-match')"><div class="nicon">✨</div><div class="nlbl">Match</div><div class="ndot"></div></button>
+    <button class="ni" id="tab-s-ai" onclick="gt('s-ai')"><div class="nicon">💬</div><div class="nlbl">AI</div><div class="ndot"></div></button>
+    <button class="ni" id="tab-s-saved" onclick="gt('s-saved')"><div class="nicon">🔖</div><div class="nlbl">Saved</div><div class="ndot"></div></button>
+  </div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+// Clock
+function tick(){const n=new Date(),h=n.getHours(),m=n.getMinutes();document.getElementById('clk').textContent=h+':'+(m<10?'0':'')+m;}
+tick();setInterval(tick,10000);
+
+const C=[
+  {id:1,name:'Tbilisi',country:'Georgia',cost:800,wifi:95,temp:'Mild',emoji:'🇬🇪',color:'#7BAA74',tags:['Budget-friendly','Walkable','Wine culture','Co-working'],desc:'One of the most underrated nomad cities. Soviet architecture, ancient churches, and thriving café culture — at a fraction of Western prices.',filters:['cheap','europe','fastnet'],mx:218,my:57},
+  {id:2,name:'Bansko',country:'Bulgaria',cost:700,wifi:88,temp:'Alpine',emoji:'🇧🇬',color:'#7A92A8',tags:['Ski resort','Very cheap','Mountain air','Community'],desc:'A ski resort turned nomad haven. The Bansko Nomads community is one of the most welcoming anywhere. Low costs, mountain air.',filters:['cheap','europe','mountain'],mx:193,my:56},
+  {id:3,name:'Chiang Mai',country:'Thailand',cost:900,wifi:88,temp:'Warm',emoji:'🇹🇭',color:'#B8A458',tags:['Foodie paradise','Temples','Huge community','Affordable'],desc:"Asia's original nomad capital. Low costs, incredible food, fast internet, and a massive international community.",filters:['cheap','asia','fastnet'],mx:277,my:135},
+  {id:4,name:'Medellín',country:'Colombia',cost:1100,wifi:78,temp:'Eternal spring',emoji:'🇨🇴',color:'#7AAE7A',tags:['Eternal spring','Nightlife','Startup hub','Spanish'],desc:"The 'City of Eternal Spring' — 22°C every day. One of Latin America's most dynamic cities with a thriving startup scene.",filters:['latin','cheap'],mx:72,my:180},
+  {id:5,name:'Cape Town',country:'South Africa',cost:1300,wifi:72,temp:'Mediterranean',emoji:'🇿🇦',color:'#608898',tags:['Scenery','Surfing','World-class food','Table Mountain'],desc:'Table Mountain, pristine beaches, whale watching, and world-class wine at emerging market prices.',filters:['beach'],mx:183,my:218},
+  {id:6,name:'Da Nang',country:'Vietnam',cost:800,wifi:84,temp:'Tropical',emoji:'🇻🇳',color:'#58A0A8',tags:['Beach city','Cheap food','Growing scene','Easy visa'],desc:'A modern, affordable beach city. My Khê beach is world-class and the food scene is exceptional.',filters:['cheap','asia','beach'],mx:284,my:137},
+  {id:7,name:'Sarajevo',country:'Bosnia',cost:650,wifi:78,temp:'Continental',emoji:'🇧🇦',color:'#9A8C6A',tags:['Old town','Very cheap','Visa-free','Coffee culture'],desc:"Eastern Europe's best kept secret. Ottoman-era old town meets café culture at prices that feel like a time machine.",filters:['cheap','europe'],mx:188,my:55},
+  {id:8,name:'Antigua',country:'Guatemala',cost:900,wifi:68,temp:'Highland cool',emoji:'🇬🇹',color:'#A07860',tags:['Colonial city','Spanish schools','Volcanoes','Craft coffee'],desc:'Surrounded by three volcanoes, one of the best-preserved colonial cities in the Americas with world-renowned local coffee.',filters:['cheap','latin','mountain'],mx:58,my:160},
+  {id:9,name:'Ohrid',country:'N. Macedonia',cost:550,wifi:70,temp:'Mediterranean',emoji:'🇲🇰',color:'#6888A8',tags:['UNESCO lake','Peaceful','Underrated','Summer paradise'],desc:'Possibly the most beautiful small town in Europe. UNESCO lake, Byzantine churches on cliffs, and prices so low they feel unreal.',filters:['cheap','europe','beach'],mx:192,my:59},
+  {id:10,name:'Zanzibar',country:'Tanzania',cost:1000,wifi:58,temp:'Tropical',emoji:'🇹🇿',color:'#78A888',tags:['Turquoise water','Spice island','Culture','Beach life'],desc:"Stone Town meets turquoise lagoons. Spice markets, pristine beaches, and Swahili culture unlike anywhere else.",filters:['beach'],mx:206,my:176},
+  {id:11,name:'Cusco',country:'Peru',cost:800,wifi:65,temp:'High altitude',emoji:'🇵🇪',color:'#B08060',tags:['Inca history','High altitude','Machu Picchu','Markets'],desc:'The ancient Inca capital at 3,400m. Cobblestone plazas, ancient stonework. Machu Picchu is 4 hours away.',filters:['cheap','latin','mountain'],mx:78,my:213},
+  {id:12,name:'Lake Atitlán',country:'Guatemala',cost:700,wifi:52,temp:'Highland mild',emoji:'🇬🇹',color:'#608888',tags:['Volcanic lake','Yoga retreats','Indigenous culture','Off-grid'],desc:'Three volcanoes ring a crater lake surrounded by Mayan villages — the spiritual heart of Guatemala.',filters:['cheap','latin','mountain'],mx:56,my:163},
+];
+
+let sv=[],fil='all',cur=null,qs=0,qa=[];
+
+function gt(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.getElementById('tab-'+id).classList.add('on');
+  if(id==='s-map')bmap();
+  if(id==='s-saved')bsav();
+  if(id==='s-match')bquiz();
+}
+
+function sf(el,f){document.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');fil=f;render();}
+
+function filt(){
+  const q=document.getElementById('sinput').value.toLowerCase();
+  return C.filter(c=>{
+    const mf=fil==='all'||c.filters.includes(fil);
+    const mq=!q||c.name.toLowerCase().includes(q)||c.country.toLowerCase().includes(q)||c.tags.some(t=>t.toLowerCase().includes(q));
+    return mf&&mq;
+  });
+}
+
+function wb(p){const n=Math.round((p/100)*4);return[1,2,3,4].map(i=>`<div class="wb" style="height:${i*3+3}px;opacity:${i<=n?1:.18};"></div>`).join('');}
+
+function render(){
+  const l=filt();
+  document.getElementById('ccount').textContent=l.length+' cities';
+  document.getElementById('hscroll').innerHTML=l.slice(0,4).map(c=>`
+    <div class="hc" onclick="osh(${c.id})">
+      <div class="hcimg" style="background:linear-gradient(135deg,${c.color} 0%,${c.color}88 100%);">
+        <span style="position:relative;z-index:1">${c.emoji}</span>
+        <div class="hcgrad"></div>
+        <div class="hccost">$${c.cost}/mo</div>
+        <button class="hsave ${sv.includes(c.id)?'on':''}" onclick="tsv(event,${c.id})">${sv.includes(c.id)?'♥':'♡'}</button>
+      </div>
+      <div class="hcbody"><div class="hcname">${c.name}</div><div class="hcsub">${c.country} · ${c.temp}</div></div>
+    </div>`).join('');
+  document.getElementById('clist').innerHTML=l.map(c=>`
+    <div class="crow" onclick="osh(${c.id})">
+      <div class="cemoji" style="background:linear-gradient(135deg,${c.color}40,${c.color}18)">${c.emoji}</div>
+      <div class="cinfo">
+        <div class="cname">${c.name}</div>
+        <div class="ccountry">${c.country} · ${c.temp}</div>
+        <div class="ctags">${c.tags.slice(0,2).map(t=>`<span class="ctag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="cr"><div class="ccost">$${c.cost}</div><div class="clbl">/month</div><div class="wbars">${wb(c.wifi)}</div></div>
+    </div>`).join('');
+}
+
+function tsv(e,id){
+  e.stopPropagation();
+  if(sv.includes(id)){sv=sv.filter(x=>x!==id);tt('Removed');}
+  else{sv.push(id);tt('Saved ♥');}
+  render();
+  if(document.getElementById('s-saved').classList.contains('on')) bsav();
+}
+
+function osh(id){
+  cur=C.find(c=>c.id===id);const c=cur;
+  document.getElementById('shhero').style.background=`linear-gradient(135deg,${c.color} 0%,${c.color}88 100%)`;
+  document.getElementById('shname').textContent=c.name;
+  document.getElementById('shctry').textContent=c.country;
+  document.getElementById('shdesc').textContent=c.desc;
+  document.getElementById('shstats').innerHTML=[{v:'$'+c.cost,l:'Cost/mo'},{v:c.wifi+'%',l:'Internet'},{v:c.temp,l:'Climate'},{v:c.tags.length+'✓',l:'Perks'}].map(s=>`<div class="shstat"><div class="shstatv">${s.v}</div><div class="shstatl">${s.l}</div></div>`).join('');
+  document.getElementById('shtags').innerHTML=c.tags.map(t=>`<span class="shtag">${t}</span>`).join('');
+  const is=sv.includes(id);
+  document.getElementById('shbtn').textContent=is?'✓ Saved':'Save this base';
+  document.getElementById('shbtn').className='shsave'+(is?' sv':'');
+  document.getElementById('shbg').classList.add('open');
+}
+function cls(e){if(!e||e.target===document.getElementById('shbg'))document.getElementById('shbg').classList.remove('open');}
+function svsh(){
+  if(!cur||sv.includes(cur.id))return;
+  sv.push(cur.id);
+  document.getElementById('shbtn').textContent='✓ Saved';
+  document.getElementById('shbtn').className='shsave sv';
+  tt('Saved ♥');render();
+}
+
+function bmap(){
+  document.getElementById('mpins').innerHTML=C.map(c=>`
+    <g style="cursor:pointer" onclick="osh(${c.id})">
+      <circle cx="${c.mx}" cy="${c.my}" r="12" fill="rgba(212,113,58,.18)"/>
+      <circle cx="${c.mx}" cy="${c.my}" r="5.5" fill="#D4713A" stroke="white" stroke-width="1.5"/>
+      <text x="${c.mx}" y="${c.my+16}" text-anchor="middle" font-size="6.5" fill="#0F0E0C" font-family="Outfit,sans-serif" font-weight="500">${c.name}</text>
+    </g>`).join('');
+  document.getElementById('mlist').innerHTML=C.map(c=>`
+    <div class="maprow" onclick="osh(${c.id})">
+      <div class="mapdot"></div>
+      <div><div class="mapname">${c.name}</div><div class="mapcountry">${c.country}</div></div>
+      <div class="mapprice">$${c.cost}/mo</div>
+    </div>`).join('');
+}
+
+function bsav(){
+  const el=document.getElementById('savcontent');
+  if(!sv.length){
+    el.innerHTML=`<div class="empty"><div class="emptyicon">🔖</div><div class="emptytitle">No saved bases yet</div><div class="emptysub">Tap the bookmark on any city card to save it here.</div></div>`;
+  } else {
+    el.innerHTML=`<div class="clist" style="padding-top:12px;">`+C.filter(c=>sv.includes(c.id)).map(c=>`
+      <div class="crow" onclick="osh(${c.id})">
+        <div class="cemoji" style="background:linear-gradient(135deg,${c.color}40,${c.color}18)">${c.emoji}</div>
+        <div class="cinfo"><div class="cname">${c.name}</div><div class="ccountry">${c.country} · ${c.temp}</div><div class="ctags">${c.tags.slice(0,2).map(t=>`<span class="ctag">${t}</span>`).join('')}</div></div>
+        <div class="cr"><div class="ccost">$${c.cost}</div><div class="clbl">/month</div></div>
+      </div>`).join('')+'</div>';
+  }
+}
+
+const QS=[
+  {q:'How much can you spend per month?',sub:'All-in: rent, food, co-working',opts:[{i:'💸',l:'Under $700',s:'Very budget',v:'cheap'},{i:'💰',l:'$700–1,200',s:'Mid-range',v:'mid'},{i:'🏦',l:'$1,200–2k',s:'Comfortable',v:'high'},{i:'💎',l:'$2k+',s:'Premium',v:'luxury'}]},
+  {q:'What climate are you craving?',sub:'Your ideal everyday weather',opts:[{i:'🏖️',l:'Beach & tropical',s:'Warm and sunny',v:'beach'},{i:'🏔️',l:'Mountain & cool',s:'Alpine air',v:'mountain'},{i:'🌸',l:'Mediterranean',s:'Mild all year',v:'med'},{i:'❄️',l:'Four seasons',s:'Cold winters',v:'cold'}]},
+  {q:'How important is the nomad community?',sub:'Meeting other remote workers',opts:[{i:'🌍',l:'Essential',s:'I want a tribe',v:'social'},{i:'👋',l:'Nice to have',s:'Some social life',v:'casual'},{i:'🔇',l:'Not important',s:'I prefer solitude',v:'solo'},{i:'🏘️',l:'Local connection',s:'Mix with locals',v:'local'}]},
+  {q:"What's your work style?",sub:'How you prefer to work remotely',opts:[{i:'☕',l:'Café hopper',s:'Different spots daily',v:'cafe'},{i:'🏢',l:'Co-working',s:'Dedicated desk',v:'cowork'},{i:'🏡',l:'Home office',s:'Quiet apartment',v:'home'},{i:'🌿',l:'Flexible',s:'Anywhere works',v:'flex'}]},
+];
+
+function bquiz(){qs=0;qa=[];dq();}
+function dq(){
+  const b=document.getElementById('qbox');
+  if(qs>=QS.length){sr();return;}
+  const q=QS[qs];
+  b.innerHTML=`<div class="qpad">
+    <div class="qprog">${QS.map((_,i)=>`<div class="qb ${i<qs?'done':i===qs?'now':''}"></div>`).join('')}</div>
+    <div class="qtitle">${q.q}</div><div class="qsub">${q.sub}</div>
+    <div class="qgrid">${q.opts.map(o=>`<button class="qopt" onclick="pq(this,'${o.v}')">
+      <span class="qicon">${o.i}</span><div class="ql">${o.l}</div><div class="qs">${o.s}</div>
+    </button>`).join('')}</div>
+    <button class="qbtn" onclick="nq()">${qs<QS.length-1?'Continue →':'Find my bases ✨'}</button>
+  </div>`;
+}
+function pq(el,v){el.closest('.qgrid').querySelectorAll('.qopt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');qa[qs]=v;}
+function nq(){qs++;dq();}
+function sr(){
+  const top=C.map(c=>{
+    let s=68+Math.floor(Math.random()*28);
+    if(qa[0]==='cheap'&&c.cost<800)s+=9;
+    if(qa[1]==='beach'&&c.filters.includes('beach'))s+=12;
+    if(qa[1]==='mountain'&&c.filters.includes('mountain'))s+=12;
+    if(c.filters.includes('fastnet'))s+=5;
+    return{...c,score:Math.min(s,99)};
+  }).sort((a,b)=>b.score-a.score).slice(0,5);
+  document.getElementById('qbox').innerHTML=`<div style="padding:16px 0 0">
+    <div class="restop"><div class="rest">Your top <em>matches</em></div><div class="ressub">Based on your lifestyle preferences</div></div>
+    ${top.map((c,i)=>`<div class="rescard" onclick="osh(${c.id})">
+      <div class="resrank">${i+1}</div>
+      <div class="resinfo"><div class="resname">${c.name}, ${c.country}</div>
+        <div class="restags">${c.tags.slice(0,3).map(t=>`<span class="restag">${t}</span>`).join('')}</div></div>
+      <div class="resscore"><span class="resscoren">${c.score}%</span><span class="resscorel">match</span></div>
+    </div>`).join('')}
+    <button class="retake" onclick="bquiz()">← Retake quiz</button>
+  </div>`;
+}
+
+const AI={
+  def:"Based on your criteria, I'd look at <strong>Chiang Mai</strong> for budget + culture, or <strong>Tbilisi</strong> for European vibes at Asian prices. Both have strong nomad communities. Want details?",
+  coffee:"Great coffee + budget picks:<br><br>🇬🇹 <strong>Antigua, Guatemala</strong> — volcano-grown coffee, colonial cafés<br>🇹🇭 <strong>Chiang Mai</strong> — huge third-wave scene, very affordable<br>🇬🇪 <strong>Tbilisi</strong> — café culture is in the city's DNA",
+  beach:"Top beach + WiFi combos:<br><br>🇻🇳 <strong>Da Nang</strong> — fibre internet + world-class beach + $800/mo<br>🇿🇦 <strong>Cape Town</strong> — sophisticated city meets stunning coastline",
+  tbilisi:"Tbilisi 2025 highlights:<br><br>✅ <strong>Cost:</strong> $700–900/mo all-in<br>✅ <strong>Internet:</strong> 90+ Mbps average<br>✅ <strong>Vibe:</strong> Ancient + hipster. Cave wine bars. Rooftop terraces.<br>✅ <strong>Visa:</strong> 365 days visa-free for most nationalities",
+  winter:"Best winter escapes:<br><br>☀️ <strong>Medellín</strong> — 22°C literally every day<br>🌊 <strong>Da Nang</strong> — dry & warm Nov–Feb<br>🌴 <strong>Chiang Mai</strong> — peak dry season<br>🇿🇦 <strong>Cape Town</strong> — their summer in December!"
+};
+function ask(t){document.getElementById('aiinp').value=t;sai();}
+function sai(){
+  const inp=document.getElementById('aiinp');const t=inp.value.trim();if(!t)return;inp.value='';
+  const b=document.getElementById('aimsgs');
+  b.innerHTML+=`<div class="aiuser"><div class="aiuser-bub">${t}</div></div>`;
+  const l=t.toLowerCase();
+  let r=AI.def;
+  if(l.includes('coffee')||l.includes('cheap'))r=AI.coffee;
+  else if(l.includes('beach')||l.includes('wifi')||l.includes('internet'))r=AI.beach;
+  else if(l.includes('tbilisi'))r=AI.tbilisi;
+  else if(l.includes('winter')||l.includes('warm'))r=AI.winter;
+  setTimeout(()=>{b.innerHTML+=`<div class="aibot"><div class="aifrom">Nomad AI</div><div class="aibot-bub">${r}</div></div>`;b.scrollTop=b.scrollHeight;},650);
+  b.scrollTop=b.scrollHeight;
+}
+
+function tt(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000);}
+
+render();
+</script>
+</body>
+</html>
