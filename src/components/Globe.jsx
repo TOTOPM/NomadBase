@@ -6,7 +6,6 @@ import styles from './Globe.module.css';
 
 const DEG = Math.PI / 180;
 
-// Real coordinates for every destination
 const COORDS = {
   'chiang-mai':        { lat: 18.8,  lon: 98.9   },
   'bali':              { lat: -8.4,  lon: 115.2  },
@@ -25,7 +24,6 @@ const COORDS = {
   'barcelona':         { lat: 41.4,  lon: 2.2    },
 };
 
-// Pre-process land polygons once (outside component)
 const landGeoJSON = feature(worldData, worldData.objects.land);
 const allRings = [];
 landGeoJSON.features.forEach(f => {
@@ -62,6 +60,48 @@ export default function Globe() {
       .filter(d => COORDS[d.id])
       .map((d, i) => ({ ...COORDS[d.id], name: d.name, emoji: d.emoji, i }));
 
+    // ── drag / touch state ───────────────────────────────────────────────────
+    let isDragging  = false;
+    let lastX       = 0;
+    let userOffset  = 0;               // accumulated manual rotation in degrees
+    const PX_TO_DEG = 360 / (2 * Math.PI * R); // ~0.37 deg/px
+
+    canvas.style.cursor = 'grab';
+
+    function onMouseDown(e) {
+      isDragging = true;
+      lastX = e.clientX;
+      canvas.style.cursor = 'grabbing';
+    }
+    function onMouseMove(e) {
+      if (!isDragging) return;
+      userOffset += (e.clientX - lastX) * PX_TO_DEG;
+      lastX = e.clientX;
+    }
+    function onMouseUp() {
+      isDragging = false;
+      canvas.style.cursor = 'grab';
+    }
+    function onTouchStart(e) {
+      isDragging = true;
+      lastX = e.touches[0].clientX;
+    }
+    function onTouchMove(e) {
+      if (!isDragging) return;
+      userOffset += (e.touches[0].clientX - lastX) * PX_TO_DEG;
+      lastX = e.touches[0].clientX;
+    }
+    function onTouchEnd() {
+      isDragging = false;
+    }
+
+    canvas.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+    canvas.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove',  onTouchMove,  { passive: true });
+    window.addEventListener('touchend',   onTouchEnd);
+
     // ── helpers ──────────────────────────────────────────────────────────────
     function project(lon, lat, rot) {
       const lonR = (lon + rot) * DEG;
@@ -95,7 +135,6 @@ export default function Globe() {
     // ── draw land rings ───────────────────────────────────────────────────────
     function drawLand(rot) {
       ctx.save();
-      // clip to globe circle
       ctx.beginPath();
       ctx.arc(cx, cy, R - 1, 0, Math.PI * 2);
       ctx.clip();
@@ -116,7 +155,6 @@ export default function Globe() {
             ctx.moveTo(x, y);
             started = true;
           } else {
-            // break path when crossing the back-to-front seam
             const dx = x - px, dy = y - py;
             if (dx * dx + dy * dy > R * R * 1.2) {
               ctx.moveTo(x, y);
@@ -157,16 +195,14 @@ export default function Globe() {
       ctx.fillStyle = ocean;
       ctx.fill();
 
-      // land (clipped inside globe)
       drawLand(rot);
 
-      // grid lines on top of land (clipped)
+      // grid lines
       ctx.save();
       ctx.beginPath();
       ctx.arc(cx, cy, R - 0.5, 0, Math.PI * 2);
       ctx.clip();
 
-      // latitude
       ctx.lineWidth = 0.4;
       for (let lat = -75; lat <= 75; lat += 15) {
         const yr = lat * DEG;
@@ -177,7 +213,6 @@ export default function Globe() {
         ctx.strokeStyle = 'rgba(255,255,255,0.07)';
         ctx.stroke();
       }
-      // longitude
       for (let i = 0; i < 12; i++) {
         const lonR = (i * 30 + rot) * DEG;
         const sinL = Math.sin(lonR);
@@ -221,7 +256,7 @@ export default function Globe() {
       // ── destination markers ──────────────────────────────────────────────
       const pts = points
         .map(p => ({ ...p, ...project(p.lon, p.lat, rot) }))
-        .sort((a, b) => a.z - b.z); // back → front
+        .sort((a, b) => a.z - b.z);
 
       pts.forEach(p => {
         if (p.z < -0.15) return;
@@ -229,7 +264,6 @@ export default function Globe() {
         const mr     = 4 + p.z * 4;
         const pulse  = (Math.sin(t * 1.7 + p.i * 1.3) + 1) / 2;
 
-        // pulse ring
         if (p.z > 0.2 && alpha > 0.4) {
           ctx.beginPath();
           ctx.arc(p.x, p.y, mr + 10 * pulse, 0, Math.PI * 2);
@@ -237,7 +271,6 @@ export default function Globe() {
           ctx.fill();
         }
 
-        // marker
         ctx.beginPath();
         ctx.arc(p.x, p.y, mr, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(193,68,14,${0.92 * alpha})`;
@@ -249,13 +282,11 @@ export default function Globe() {
         ctx.lineWidth   = 1.5;
         ctx.stroke();
 
-        // inner dot
         ctx.beginPath();
         ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(250,245,235,${alpha})`;
         ctx.fill();
 
-        // label (only when clearly facing front)
         if (p.z > 0.2) {
           const la = Math.min(1, (p.z - 0.2) * 5);
           const label = `${p.emoji} ${p.name}`;
@@ -269,9 +300,9 @@ export default function Globe() {
           ctx.fillStyle = `rgba(10,6,2,${0.82 * la})`;
           ctx.fill();
 
-          ctx.fillStyle      = `rgba(250,245,235,${la})`;
-          ctx.textAlign      = 'center';
-          ctx.textBaseline   = 'middle';
+          ctx.fillStyle    = `rgba(250,245,235,${la})`;
+          ctx.textAlign    = 'center';
+          ctx.textBaseline = 'middle';
           ctx.fillText(label, lx, ly);
         }
       });
@@ -282,13 +313,22 @@ export default function Globe() {
     function animate(ts) {
       if (!start) start = ts;
       const t   = (ts - start) / 1000;
-      const rot = -t * 7; // 7°/s westward
+      const rot = -t * 7 + userOffset;   // auto-spin + manual drag offset
       draw(rot, t);
       rafRef.current = requestAnimationFrame(animate);
     }
 
     rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      canvas.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mousemove',  onMouseMove);
+      window.removeEventListener('mouseup',    onMouseUp);
+      canvas.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove',  onTouchMove);
+      window.removeEventListener('touchend',   onTouchEnd);
+    };
   }, []);
 
   return (

@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   background: var(--cream);
+  overflow: hidden;
 }
 
 .header {
@@ -37,29 +38,85 @@
   font-weight: 500;
 }
 
-.progressBar {
-  height: 3px;
-  background: var(--sand);
-  width: 100%;
+/* Progress dots */
+.dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 24px 20px;
 }
 
-.progressFill {
-  height: 100%;
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--sand);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  flex-shrink: 0;
+}
+
+.dotActive {
+  width: 28px;
+  border-radius: 4px;
   background: var(--terracotta);
-  transition: width 0.4s ease;
+}
+
+.dotDone {
+  background: var(--terracotta);
+  opacity: 0.35;
 }
 
 .main {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 40px 24px 48px;
+  padding: 16px 24px 48px;
   max-width: 560px;
   margin: 0 auto;
   width: 100%;
+}
+
+/* Animated card wrapper */
+.card {
+  display: flex;
+  flex-direction: column;
   gap: 40px;
 }
 
+/* Slide animations */
+@keyframes slideFromRight {
+  from { transform: translateX(48px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes slideFromLeft {
+  from { transform: translateX(-48px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
+@keyframes slideToLeft {
+  from { transform: translateX(0);     opacity: 1; }
+  to   { transform: translateX(-48px); opacity: 0; }
+}
+
+@keyframes slideToRight {
+  from { transform: translateX(0);    opacity: 1; }
+  to   { transform: translateX(48px); opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.slideEnter      { animation: fadeIn         0.28s ease forwards; }
+.slideEnterRight { animation: slideFromRight  0.25s ease forwards; }
+.slideEnterLeft  { animation: slideFromLeft   0.25s ease forwards; }
+.slideExitLeft   { animation: slideToLeft     0.17s ease forwards; pointer-events: none; }
+.slideExitRight  { animation: slideToRight    0.17s ease forwards; pointer-events: none; }
+
+/* Agent bubble */
 .agentBubble {
   display: flex;
   gap: 16px;
@@ -89,6 +146,7 @@
   line-height: 1.35;
 }
 
+/* Options */
 .options {
   display: flex;
   flex-direction: column;
@@ -106,6 +164,9 @@
   color: var(--brown);
   box-shadow: var(--card-shadow);
   transition: border-color 0.15s, transform 0.1s, background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .option:hover {
@@ -117,4 +178,17 @@
 .option:active {
   transform: translateY(0);
   background: #ffeee8;
+}
+
+.optionSelected {
+  border-color: var(--terracotta);
+  background: #fff8f5;
+}
+
+.checkmark {
+  color: var(--terracotta);
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+  line-height: 1;
 }

@@ -4,3 +4,7 @@
   align-items: center;
   filter: drop-shadow(0 20px 60px rgba(193, 68, 14, 0.18)) drop-shadow(0 4px 20px rgba(0,0,0,0.15));
 }
+
+.wrap canvas {
+  touch-action: none;
+}
