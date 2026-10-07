@@ -3,9 +3,9 @@ export const questions = [
     id: 'experience',
     question: "Let's start easy — have you ever lived as a digital nomad before?",
     options: [
-      { label: "No, this would be my first time 🌱", value: 'first' },
+      { label: "No, this would be my first time", value: 'first' },
       { label: "I've tried it briefly (1–3 months)", value: 'beginner' },
-      { label: "Yes, I've been doing it for a while ✈️", value: 'experienced' },
+      { label: "Yes, I've been doing it for a while", value: 'experienced' },
     ],
   },
   {
@@ -21,9 +21,9 @@ export const questions = [
     id: 'region',
     question: "Any part of the world calling to you?",
     options: [
-      { label: "Asia 🌏", value: 'asia' },
-      { label: "Europe 🌍", value: 'europe' },
-      { label: "Latin America 🌎", value: 'latam' },
+      { label: "Asia", value: 'asia' },
+      { label: "Europe", value: 'europe' },
+      { label: "Latin America", value: 'latam' },
       { label: "Surprise me — no preference!", value: 'any' },
     ],
   },
@@ -41,8 +41,8 @@ export const questions = [
     id: 'weather',
     question: "Sun chaser or mild-weather person?",
     options: [
-      { label: "Hot & tropical — give me the heat 🌴", value: 'hot' },
-      { label: "Mild & pleasant — not too hot, not too cold ☀️", value: 'mild' },
+      { label: "Hot & tropical — give me the heat", value: 'hot' },
+      { label: "Mild & pleasant — not too hot, not too cold", value: 'mild' },
       { label: "I genuinely don't mind either way", value: 'any' },
     ],
   },

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { questions } from '../data/questions';
+import { IconCheck } from './icons';
 import styles from './Agent.module.css';
 
 const SLIDE = {
@@ -77,7 +78,7 @@ export default function Agent({ onComplete, onBack }) {
                 onClick={() => handleAnswer(opt.value)}
               >
                 {answers[current.id] === opt.value && (
-                  <span className={styles.checkmark}>✓</span>
+                  <span className={styles.checkmark}><IconCheck /></span>
                 )}
                 {opt.label}
               </button>

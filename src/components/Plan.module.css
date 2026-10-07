@@ -67,12 +67,10 @@
   padding: 18px 22px;
 }
 
-.flag { font-size: 32px; line-height: 1; }
-
 .city {
   font-size: 26px;
   color: var(--white);
-  margin: 4px 0 0;
+  margin: 0;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
@@ -103,7 +101,13 @@
 }
 
 .sectionIcon {
-  font-size: 15px;
+  display: inline-flex;
+  color: var(--terracotta);
+}
+
+.sectionIcon svg {
+  width: 16px;
+  height: 16px;
 }
 
 .text {
@@ -201,6 +205,11 @@
 }
 
 .checkBox:hover { border-color: var(--terracotta); transform: scale(1.05); }
+
+.checkBox svg {
+  width: 13px;
+  height: 13px;
+}
 
 .checkBoxDone {
   background: var(--green);

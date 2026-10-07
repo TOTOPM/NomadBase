@@ -58,7 +58,7 @@ export default function Globe() {
 
     const points = destinations
       .filter(d => COORDS[d.id])
-      .map((d, i) => ({ ...COORDS[d.id], name: d.name, emoji: d.emoji, i }));
+      .map((d, i) => ({ ...COORDS[d.id], name: d.name, i }));
 
     // ── drag / touch state ───────────────────────────────────────────────────
     let isDragging  = false;
@@ -289,7 +289,7 @@ export default function Globe() {
 
         if (p.z > 0.2) {
           const la = Math.min(1, (p.z - 0.2) * 5);
-          const label = `${p.emoji} ${p.name}`;
+          const label = p.name;
           ctx.font = '600 10px Arial, sans-serif';
           const tw = ctx.measureText(label).width;
           const lx = p.x;

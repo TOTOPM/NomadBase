@@ -1,4 +1,6 @@
 import { getMatchReasons, getMatchBreakdown } from '../utils/scoring';
+import RouteMotif from './RouteMotif';
+import { IconCheck } from './icons';
 import styles from './Result.module.css';
 
 export default function Result({ top, all, answers, onViewPlan, onRestart }) {
@@ -14,6 +16,7 @@ export default function Result({ top, all, answers, onViewPlan, onRestart }) {
         <span className={styles.logo}>NomadBase</span>
         <span />
       </div>
+      <RouteMotif />
 
       <main className={styles.main}>
         <p className={styles.intro}>Based on your answers, your perfect first destination is…</p>
@@ -22,7 +25,6 @@ export default function Result({ top, all, answers, onViewPlan, onRestart }) {
           <div className={styles.photo} style={{ backgroundImage: `url(${top.image})` }}>
             <div className={styles.photoOverlay} />
             <div className={styles.photoContent}>
-              <span className={styles.flag}>{top.emoji}</span>
               <h1 className={styles.city}>{top.name}</h1>
               <p className={styles.country}>{top.country}</p>
             </div>
@@ -61,7 +63,7 @@ export default function Result({ top, all, answers, onViewPlan, onRestart }) {
           <div className={styles.reasonList}>
             {reasons.map((r, i) => (
               <div key={i} className={styles.reason}>
-                <span className={styles.checkmark}>✓</span>
+                <span className={styles.checkmark}><IconCheck /></span>
                 <span>{r}</span>
               </div>
             ))}
@@ -83,7 +85,7 @@ export default function Result({ top, all, answers, onViewPlan, onRestart }) {
                     style={{ backgroundImage: `url(${dest.image})` }}
                   />
                   <div className={styles.altBody}>
-                    <p className={styles.altCity}>{dest.emoji} {dest.name}</p>
+                    <p className={styles.altCity}>{dest.name}</p>
                     <p className={styles.altCountry}>{dest.country}</p>
                   </div>
                   <div className={styles.altScore}>

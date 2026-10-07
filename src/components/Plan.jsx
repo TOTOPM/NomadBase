@@ -1,13 +1,15 @@
 import { useState } from 'react';
+import RouteMotif from './RouteMotif';
+import { IconPin, IconLaptop, IconHome, IconWifi, IconPassport, IconUsers, IconCheck } from './icons';
 import styles from './Plan.module.css';
 
 const SECTION_ICONS = {
-  neighborhoods: '🏘️',
-  coworking: '💻',
-  accommodation: '🏠',
-  wifi: '📶',
-  visa: '🛂',
-  community: '👥',
+  neighborhoods: IconPin,
+  coworking: IconLaptop,
+  accommodation: IconHome,
+  wifi: IconWifi,
+  visa: IconPassport,
+  community: IconUsers,
 };
 
 export default function Plan({ destination: dest, onBack, onRestart }) {
@@ -28,12 +30,12 @@ export default function Plan({ destination: dest, onBack, onRestart }) {
         <span className={styles.logo}>NomadBase</span>
         <span />
       </div>
+      <RouteMotif />
 
       <main className={styles.main}>
         <div className={styles.hero} style={{ backgroundImage: `url(${dest.image})` }}>
           <div className={styles.heroOverlay} />
           <div className={styles.heroContent}>
-            <span className={styles.flag}>{dest.emoji}</span>
             <h1 className={styles.city}>{dest.name} Plan</h1>
             <p className={styles.sub}>Your complete guide to getting started</p>
           </div>
@@ -69,7 +71,7 @@ export default function Plan({ destination: dest, onBack, onRestart }) {
 
         <div className={styles.section}>
           <div className={styles.checklistHeader}>
-            <h2 className={styles.sectionTitle}><span className={styles.sectionIcon}>✅</span>Your First Week — Step by Step</h2>
+            <h2 className={styles.sectionTitle}><span className={styles.sectionIcon}><IconCheck /></span>Your First Week — Step by Step</h2>
             <span className={styles.progressLabel}>{doneCount}/{checked.length} done</span>
           </div>
           <div className={styles.progressTrack}>
@@ -84,7 +86,7 @@ export default function Plan({ destination: dest, onBack, onRestart }) {
                   aria-pressed={checked[i]}
                   aria-label={`Mark step ${i + 1} as ${checked[i] ? 'not done' : 'done'}`}
                 >
-                  {checked[i] ? '✓' : i + 1}
+                  {checked[i] ? <IconCheck /> : i + 1}
                 </button>
                 <span className={checked[i] ? styles.checkTextDone : ''}>{step}</span>
               </li>
@@ -100,10 +102,10 @@ export default function Plan({ destination: dest, onBack, onRestart }) {
   );
 }
 
-function Section({ icon, title, children }) {
+function Section({ icon: Icon, title, children }) {
   return (
     <div className={styles.section}>
-      <h2 className={styles.sectionTitle}><span className={styles.sectionIcon}>{icon}</span>{title}</h2>
+      <h2 className={styles.sectionTitle}><span className={styles.sectionIcon}><Icon /></span>{title}</h2>
       {children}
     </div>
   );

@@ -187,8 +187,12 @@
 
 .checkmark {
   color: var(--terracotta);
-  font-size: 14px;
-  font-weight: 700;
   flex-shrink: 0;
   line-height: 1;
+  display: inline-flex;
+}
+
+.checkmark svg {
+  width: 15px;
+  height: 15px;
 }
