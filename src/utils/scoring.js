@@ -75,3 +75,22 @@ export function getMatchReasons(dest, answers) {
 
   return reasons.slice(0, 4);
 }
+
+const PRIORITY_LABELS = { community: 'Community', nature: 'Nature', city: 'City life', mix: 'Lifestyle mix' };
+
+export function getMatchBreakdown(dest, answers) {
+  const priorityValue = answers.priority === 'mix'
+    ? Math.round((dest.scores.community + dest.scores.nature + dest.scores.city) / 3)
+    : dest.scores[answers.priority] ?? 7;
+
+  const weatherValue = answers.weather === 'hot' ? dest.scores.hot
+    : answers.weather === 'mild' ? dest.scores.mild
+    : 7;
+
+  return [
+    { label: 'Budget fit', value: dest.scores.budget[answers.budget] ?? 5 },
+    { label: PRIORITY_LABELS[answers.priority] ?? 'Lifestyle fit', value: priorityValue },
+    { label: 'Weather fit', value: weatherValue },
+    { label: 'Internet quality', value: dest.scores.wifi },
+  ];
+}

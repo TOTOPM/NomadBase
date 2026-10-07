@@ -37,7 +37,7 @@
 .main {
   display: flex;
   flex-direction: column;
-  padding: 32px 24px 72px;
+  padding: 24px 24px 72px;
   max-width: 560px;
   margin: 0 auto;
   width: 100%;
@@ -45,24 +45,41 @@
 }
 
 .hero {
+  position: relative;
+  height: 180px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
   display: flex;
-  align-items: center;
-  gap: 16px;
-  padding-bottom: 8px;
+  align-items: flex-end;
+  box-shadow: var(--card-shadow);
 }
 
-.flag { font-size: 48px; line-height: 1; }
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(28, 18, 8, 0) 25%, rgba(28, 18, 8, 0.78) 100%);
+}
+
+.heroContent {
+  position: relative;
+  padding: 18px 22px;
+}
+
+.flag { font-size: 32px; line-height: 1; }
 
 .city {
-  font-size: 32px;
-  color: var(--brown);
-  margin: 0;
+  font-size: 26px;
+  color: var(--white);
+  margin: 4px 0 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .sub {
-  font-size: 14px;
-  color: var(--brown-light);
-  margin-top: 4px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 2px;
 }
 
 .section {
@@ -80,6 +97,13 @@
   letter-spacing: 1px;
   color: var(--terracotta);
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionIcon {
+  font-size: 15px;
 }
 
 .text {
@@ -111,6 +135,37 @@
   font-weight: 700;
 }
 
+.checklistHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.checklistHeader .sectionTitle { margin-bottom: 0; }
+
+.progressLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--green);
+  flex-shrink: 0;
+}
+
+.progressTrack {
+  height: 6px;
+  background: var(--cream);
+  border-radius: 50px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--green);
+  border-radius: 50px;
+  transition: width 0.3s ease-out;
+}
+
 .checklist {
   list-style: none;
   padding: 0;
@@ -128,19 +183,35 @@
   line-height: 1.5;
 }
 
-.stepDot {
-  width: 24px;
-  height: 24px;
+.checkBox {
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: var(--green);
-  color: var(--white);
+  background: var(--cream);
+  border: 2px solid var(--sand);
+  color: var(--brown-light);
   font-size: 12px;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  margin-top: 1px;
+  margin-top: 0;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.1s;
+}
+
+.checkBox:hover { border-color: var(--terracotta); transform: scale(1.05); }
+
+.checkBoxDone {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--white);
+}
+
+.checkTextDone {
+  color: var(--brown-light);
+  text-decoration: line-through;
+  text-decoration-color: var(--sand);
 }
 
 .restartBtn {

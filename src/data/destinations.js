@@ -5,6 +5,7 @@ export const destinations = [
     country: 'Thailand',
     region: 'asia',
     emoji: '🇹🇭',
+    image: '/images/destinations/chiang-mai.jpg',
     tagline: 'The digital nomad capital of Southeast Asia',
     budgetRange: '$800–$1,500/mo',
     scores: {
@@ -45,6 +46,7 @@ export const destinations = [
     country: 'Indonesia',
     region: 'asia',
     emoji: '🇮🇩',
+    image: '/images/destinations/bali.jpg',
     tagline: 'Where surf, spirituality, and startups meet',
     budgetRange: '$1,000–$2,500/mo',
     scores: {
@@ -85,6 +87,7 @@ export const destinations = [
     country: 'Portugal',
     region: 'europe',
     emoji: '🇵🇹',
+    image: '/images/destinations/lisbon.jpg',
     tagline: "Europe's most affordable and soulful capital",
     budgetRange: '$1,800–$3,500/mo',
     scores: {
@@ -125,6 +128,7 @@ export const destinations = [
     country: 'Colombia',
     region: 'latam',
     emoji: '🇨🇴',
+    image: '/images/destinations/medellin.jpg',
     tagline: 'The city of eternal spring',
     budgetRange: '$1,000–$2,200/mo',
     scores: {
@@ -165,6 +169,7 @@ export const destinations = [
     country: 'Georgia',
     region: 'europe',
     emoji: '🇬🇪',
+    image: '/images/destinations/tbilisi.jpg',
     tagline: "Europe's hidden gem for digital nomads",
     budgetRange: '$700–$1,500/mo',
     scores: {
@@ -205,6 +210,7 @@ export const destinations = [
     country: 'Mexico',
     region: 'latam',
     emoji: '🇲🇽',
+    image: '/images/destinations/mexico-city.jpg',
     tagline: 'A megacity with a small-town nomad soul',
     budgetRange: '$1,200–$2,500/mo',
     scores: {
@@ -245,6 +251,7 @@ export const destinations = [
     country: 'Thailand',
     region: 'asia',
     emoji: '🇹🇭',
+    image: '/images/destinations/bangkok.jpg',
     tagline: "Asia's most electric city — always on, always surprising",
     budgetRange: '$900–$1,800/mo',
     scores: {
@@ -285,6 +292,7 @@ export const destinations = [
     country: 'Vietnam',
     region: 'asia',
     emoji: '🇻🇳',
+    image: '/images/destinations/da-nang.jpg',
     tagline: 'Beach and city in one — Vietnam\'s fastest-growing hub',
     budgetRange: '$700–$1,400/mo',
     scores: {
@@ -325,6 +333,7 @@ export const destinations = [
     country: 'Portugal',
     region: 'europe',
     emoji: '🇵🇹',
+    image: '/images/destinations/porto.jpg',
     tagline: 'Lisbon\'s charming, more affordable sister city',
     budgetRange: '$1,400–$2,500/mo',
     scores: {
@@ -365,6 +374,7 @@ export const destinations = [
     country: 'Turkey',
     region: 'europe',
     emoji: '🇹🇷',
+    image: '/images/destinations/istanbul.jpg',
     tagline: 'Where two continents meet — ancient, vibrant, and underrated',
     budgetRange: '$800–$1,600/mo',
     scores: {
@@ -405,6 +415,7 @@ export const destinations = [
     country: 'Hungary',
     region: 'europe',
     emoji: '🇭🇺',
+    image: '/images/destinations/budapest.jpg',
     tagline: "Europe's most underrated city for digital nomads",
     budgetRange: '$900–$1,800/mo',
     scores: {
@@ -445,6 +456,7 @@ export const destinations = [
     country: 'Mexico',
     region: 'latam',
     emoji: '🇲🇽',
+    image: '/images/destinations/playa-del-carmen.jpg',
     tagline: 'Caribbean sun, warm community, La 5ta Avenida magic',
     budgetRange: '$1,200–$2,200/mo',
     scores: {
@@ -485,6 +497,7 @@ export const destinations = [
     country: 'South Korea',
     region: 'asia',
     emoji: '🇰🇷',
+    image: '/images/destinations/seoul.jpg',
     tagline: "The world's fastest internet in one of its most exciting cities",
     budgetRange: '$1,800–$3,200/mo',
     scores: {
@@ -525,6 +538,7 @@ export const destinations = [
     country: 'South Africa',
     region: 'africa',
     emoji: '🇿🇦',
+    image: '/images/destinations/cape-town.jpg',
     tagline: "Africa's most beautiful city — and its fastest-growing nomad hub",
     budgetRange: '$1,200–$2,200/mo',
     scores: {
@@ -565,6 +579,7 @@ export const destinations = [
     country: 'Spain',
     region: 'europe',
     emoji: '🇪🇸',
+    image: '/images/destinations/barcelona.jpg',
     tagline: 'Mediterranean lifestyle, Gaudí architecture, beach in the city',
     budgetRange: '$2,000–$3,500/mo',
     scores: {
